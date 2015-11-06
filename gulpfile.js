@@ -8,6 +8,7 @@ var gulp = require('gulp'),
     concat = require('gulp-concat'),
     less = require('gulp-less'),
     rename = require('gulp-rename'),
+    process = require('child_process'),
     minifyHTML = require('gulp-minify-html');
 
 var paths = {
@@ -56,8 +57,7 @@ gulp.task('custom-images', function() {
 
 gulp.task('custom-js', function() {
     return gulp.src(paths.scripts)
-        .pipe(minifyJs())
-        .pipe(concat('dashboard.min.js'))
+        .pipe(concat('qkdiary.js'))
         .pipe(gulp.dest('static/dist/js'));
 });
 
@@ -69,7 +69,6 @@ gulp.task('custom-less', function() {
 
 gulp.task('custom-templates', function() {
     return gulp.src(paths.templates)
-        .pipe(minifyHTML())
         .pipe(gulp.dest('static/dist/templates'));
 });
 
@@ -101,8 +100,15 @@ gulp.task('livereload', function() {
         .pipe(connect.reload());
 });
 
+gulp.task('flask', function(){
+    var spawn = process.spawn;
+    console.info('Starting flask server');
+    var PIPE = {stdio: 'inherit'};
+    spawn('python', ['manage.py','runserver'], PIPE);
+});
+
 /**
  * Gulp tasks
  */
 gulp.task('build', ['usemin', 'build-assets', 'build-custom']);
-gulp.task('default', ['build', 'webserver', 'livereload', 'watch']);
+gulp.task('default', ['build', 'flask', 'livereload', 'watch']);

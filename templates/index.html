@@ -10,6 +10,7 @@
   <link rel="stylesheet" type="text/css" href="../static/components/bootstrap/dist/css/bootstrap.min.css">
   <link rel="stylesheet" type="text/css" href="../static/components/font-awesome/css/font-awesome.min.css">
   <link rel="stylesheet" type="text/css" href="../static/components/rdash-ui/dist/css/rdash.min.css">
+  <link rel="stylesheet" type="text/css" href="../static/css/qkdiary.css">
   <!-- endbuild -->
   <!-- SCRIPTS -->
   <!-- build:js lib/js/main.min.js -->
@@ -19,27 +20,32 @@
   <script type="text/javascript" src="../static/components/angular-ui-router/release/angular-ui-router.min.js"></script>
   <!-- endbuild -->
   <!-- Custom Scripts -->
-  <script type="text/javascript" src="js/dashboard.min.js"></script>
+  <script type="text/javascript" src="../static/dist/js/qkdiary.js"></script>
 </head>
 <body ng-controller="MasterCtrl">
   <div id="page-wrapper" ng-class="{'open': toggle}" ng-cloak>
-
     <!-- Sidebar -->
     <div id="sidebar-wrapper">
       <ul class="sidebar">
         <li class="sidebar-main">
           <a ng-click="toggleSidebar()">
-            Dashboard
+            QKDiary
             <span class="menu-icon glyphicon glyphicon-transfer"></span>
           </a>
         </li>
-        <li class="sidebar-title"><span>NAVIGATION</span></li>
-        <li class="sidebar-list">
-          <a href="#">Dashboard <span class="menu-icon fa fa-tachometer"></span></a>
-        </li>
-        <li class="sidebar-list">
-          <a href="#/tables">Tables <span class="menu-icon fa fa-table"></span></a>
-        </li>
+        <div class="text-center">
+          <li class="sidebar-list">
+            <div>
+              <a href="#"><span class="menu-icon fa fa-calendar"></span><br><p class="sidebar-label">Memories</p></a>
+            </div>
+          </li>
+          <li class="sidebar-list">
+            <a href="#/tables"><span class="menu-icon fa fa-star"></span><br><p class="sidebar-label">Favourites</p></a>
+          </li>
+          <li class="sidebar-list">
+            <a href="#/settings"><span class="menu-icon fa fa-cogs"></span><br><p class="sidebar-label">Settings</p></a>
+          </li>
+        </div>
       </ul>
       <div class="sidebar-footer">
         <div class="col-xs-4">
@@ -70,7 +76,7 @@
             <div class="user pull-right">
               <div class="item dropdown">
                 <a href="#" class="dropdown-toggle">
-                  <img src="img/avatar.jpg">
+                  <img src="../static/img/avatar.jpg">
                 </a>
                 <ul class="dropdown-menu dropdown-menu-right">
                   <li class="dropdown-header">
@@ -116,12 +122,6 @@
               </div>
             </div>
             <div class="meta">
-              <div class="page">
-                Dashboard
-              </div>
-              <div class="breadcrumb-links">
-                Home / Dashboard
-              </div>
             </div>
           </div>
         </div>

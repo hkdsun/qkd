@@ -1,0 +1,67 @@
+/*=============*/
+/*CUSTOM HEADER*/
+/*=============*/
+.row.header {
+  background: #2D3E63;
+}
+
+
+/*=================*/
+/*CUSTOM MENU ICONS*/
+/*=================*/
+/*When the menu is open*/
+ul.sidebar .sidebar-list {
+  height: 40px;
+}
+ul.sidebar .sidebar-list a {
+  text-indent: 0px;
+  font-size: 15px;
+  color: #b2bfdc;
+  line-height: normal;
+}
+ul.sidebar .sidebar-list a:hover {
+  color: #fff;
+  border-left: 3px solid #e99d1a;
+  padding-right: 3px;
+  text-indent: 0px;
+}
+ul.sidebar .sidebar-list a:hover .menu-icon {
+  text-indent: 0px;
+}
+ul.sidebar .sidebar-list .menu-icon {
+  font-size:4em;
+  float: none;
+  padding-right: 0px;
+  width: 70px;
+  line-height: 90px;
+}
+
+/*When the menu is closed*/
+#page-wrapper:not(.open) ul.sidebar .sidebar-list {
+  height: 40px;
+}
+#page-wrapper:not(.open) ul.sidebar .sidebar-list a {
+  text-indent: 25px;
+  font-size: 15px;
+  color: #b2bfdc;
+  line-height: 100px;
+}
+#page-wrapper:not(.open) ul.sidebar .sidebar-list a:hover {
+  color: #fff;
+  border-left: 3px solid #e99d1a;
+  text-indent: 22px;
+}
+#page-wrapper:not(.open) ul.sidebar .sidebar-list a:hover .menu-icon {
+  text-indent: 25px;
+}
+#page-wrapper:not(.open) ul.sidebar .sidebar-list .menu-icon {
+  padding-top: 25px;
+  font-size:23px;
+  float: right;
+  padding-right: 29px;
+  line-height: 40px;
+  width: 70px;
+}
+#page-wrapper:not(.open) ul.sidebar .sidebar-list .sidebar-label {
+  display: none;
+}

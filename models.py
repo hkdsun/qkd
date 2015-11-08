@@ -1,4 +1,16 @@
 from app import db
+from datetime import date
+from marshmallow import Schema, fields, pprint, post_load
+
+
+class EntrySchema(Schema):
+    id = fields.Int(dump_only=True)
+    url = fields.URL()
+    body = fields.String()
+
+    @post_load
+    def make_entry(self, data):
+        return Entry(**data)
 
 
 class Entry(db.Model):

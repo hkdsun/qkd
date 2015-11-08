@@ -4,7 +4,7 @@
  */
 
 angular
-    .module('RDash')
+    .module('QKDiary')
     .directive('rdLoading', rdLoading);
 
 function rdLoading() {

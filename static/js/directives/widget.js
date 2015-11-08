@@ -3,7 +3,7 @@
  */
 
 angular
-    .module('RDash')
+    .module('QKDiary')
     .directive('rdWidget', rdWidget);
 
 function rdWidget() {

@@ -1,1 +1,1 @@
-angular.module('RDash', ['ui.bootstrap', 'ui.router', 'ngCookies']);
+angular.module('QKDiary', ['ngResource', 'ngCookies', 'ui.bootstrap', 'ui.router']);

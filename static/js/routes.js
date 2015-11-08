@@ -1,9 +1,9 @@
 'use strict';
 
 /**
- * Route configuration for the RDash module.
+ * Route configuration for the QKDiary module.
  */
-angular.module('RDash').config(['$stateProvider', '$urlRouterProvider',
+angular.module('QKDiary').config(['$stateProvider', '$urlRouterProvider',
     function($stateProvider, $urlRouterProvider) {
 
         // For unmatched routes
@@ -15,9 +15,5 @@ angular.module('RDash').config(['$stateProvider', '$urlRouterProvider',
                 url: '/',
                 templateUrl: 'static/templates/dashboard.html'
             })
-            .state('tables', {
-                url: '/tables',
-                templateUrl: 'static/templates/tables.html'
-            });
     }
 ]);

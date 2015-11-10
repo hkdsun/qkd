@@ -1,7 +1,14 @@
-<div class="row" data-ng-controller="EntriesCtrl">
-  <div data-ng-repeat="entry in entries" class="col-xs-12 entry-widget-container">
+
+<div class="row" ng-controller="EntriesCtrl">
+  <!-- Button trigger modal -->
+  <button class="btn btn-default btn-block" style="width:97%; margin: 20px 20px" ng-click="open()" data-target="#myModalHorizontal">
+    Add New Entry
+  </button>
+  <div ng-include="'static/templates/entry_modal.html'"></div>
+  <!-- List all the entries -->
+  <div data-ng-repeat="entry in entries | orderBy : date : true" class="col-xs-12 entry-widget-container">
     <rd-widget>
-      <rd-widget-header icon="fa-star" title="Jan 1st, 2015 ({{entry.id}})">
+      <rd-widget-header icon="fa-star" title='{{entry.date | amCalendar }}'>
         <i class="fa fa-trash pull-right"></i>
         <i class="fa fa-pencil pull-right"></i>
       </rd-widget-header>

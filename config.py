@@ -1,5 +1,6 @@
 import os
 
+
 class Config(object):
     DEBUG = False
     TESTING = False
@@ -18,7 +19,7 @@ class StagingConfig(Config):
 
 
 class DevelopmentConfig(Config):
-    DEVELOPMENT = True
+    # DEVELOPMENT = True
     DEBUG = True
 
 

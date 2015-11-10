@@ -13,13 +13,16 @@
   ],
   "dependencies": {
     "rdash-ui": "1.0.*",
+    "jquery": "latest",
     "angular": "latest",
     "angular-cookies": "latest",
     "angular-bootstrap": "latest",
     "angular-ui-router": "latest",
     "angular-resource": "latest",
-    "bootstrap": "~3.2.0",
-    "font-awesome": "latest"
+    "bootstrap": "latest",
+    "font-awesome": "latest",
+    "moment": "~2.10.6",
+    "angular-moment": "~0.10.3"
   },
   "repository": {
     "type": "git"

@@ -7,6 +7,7 @@ class Config(object):
     CSRF_ENABLED = True
     SECRET_KEY = 'this-really-needs-to-be-changed'
     SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 
 class ProductionConfig(Config):
@@ -19,8 +20,9 @@ class StagingConfig(Config):
 
 
 class DevelopmentConfig(Config):
-    # DEVELOPMENT = True
+    DEVELOPMENT = True
     DEBUG = True
+    SQLALCHEMY_TRACK_MODIFICATIONS = True
 
 
 class TestingConfig(Config):

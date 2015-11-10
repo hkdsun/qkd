@@ -1,6 +1,10 @@
 from app import db
 from datetime import date, datetime
 from marshmallow import Schema, fields, pprint, post_load
+from pytz import timezone
+
+eastern = timezone('US/Eastern')
+utc = timezone('UTC')
 
 
 class EntrySchema(Schema):
@@ -21,7 +25,9 @@ class Entry(db.Model):
     user = db.Column(db.String())
     body = db.Column(db.String())
 
-    def __init__(self, body, date=datetime.now()):
+    def __init__(self, body, date=None):
+        if not date:
+            date = utc.normalize(datetime.now(tz=eastern))
         self.date = date
         self.body = body
 

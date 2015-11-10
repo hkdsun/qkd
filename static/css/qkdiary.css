@@ -29,6 +29,16 @@
   padding-top: 20px;
 }
 
+.modal-body {
+  overflow-y: auto;
+}
+
+.entry-button {
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-bottom: 15px;
+}
+
 
 /*=================*/
 /*CUSTOM MENU ICONS*/

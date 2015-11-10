@@ -1,1 +1,1 @@
-angular.module('QKDiary', ['ngResource', 'ngCookies', 'ui.bootstrap', 'ui.router', 'angularMoment']);
+angular.module('QKDiary', ['ngAnimate', 'ngResource', 'ngCookies', 'ui.bootstrap', 'ui.router', 'angularMoment']);

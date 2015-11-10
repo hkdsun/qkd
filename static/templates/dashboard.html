@@ -1,9 +1,11 @@
 
 <div class="row" ng-controller="EntriesCtrl">
   <!-- Button trigger modal -->
-  <button class="btn btn-default btn-block" style="width:97%; margin: 20px 20px" ng-click="open()" data-target="#myModalHorizontal">
-    Add New Entry
-  </button>
+  <div class="span12 entry-button" style="text-align:center">
+    <button class="btn btn-default btn-block" ng-click="open()">
+      Add New Entry
+    </button>
+</div>
   <div ng-include="'static/templates/entry_modal.html'"></div>
   <!-- List all the entries -->
   <div data-ng-repeat="entry in entries | orderBy : date : true" class="col-xs-12 entry-widget-container">

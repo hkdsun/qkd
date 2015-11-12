@@ -26,11 +26,15 @@ function EntriesCtrl($scope, $uibModal, $resource, Entry) {
   };
 
   $scope.delete = function(entry) {
-    Entry.remove({id:entry.id}).$promise.then(function(r) {
+    Entry.remove({id:entry.id}).$promise.then(
+    function(r) {
       var index = $scope.entries.indexOf(entry);
       if (index > -1) {
         $scope.entries.splice(index, 1);
       }
+    }, 
+    function(errResponse) {
+    console.log(errResponse)
     });
   };
 

@@ -1,50 +1,71 @@
-from flask import Flask, request, jsonify, make_response, render_template
+from flask import Flask, request, jsonify, make_response, render_template, redirect, url_for
 from flask.ext.sqlalchemy import SQLAlchemy
 import os
 from twilio.rest import TwilioRestClient
 from twilio import twiml
 from pytz import timezone
 from flask.ext.login import LoginManager
+from flask.ext.login import login_user, logout_user, current_user, login_required
 
 app = Flask(__name__)
 app.config.from_object(os.environ['APP_SETTINGS'])
 db = SQLAlchemy(app)
 twilio = TwilioRestClient()
 
-from models import Entry, EntrySchema
+from models import Entry, EntrySchema, User, UserSchema
 
 entry_schema = EntrySchema()
 entries_schema = EntrySchema(many=True)
+user_schema = UserSchema()
+users_schema = UserSchema(many=True)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
+
 
 @login_manager.user_loader
 def load_user(username):
     return User.query.get(str(username))
 
 
-@app.route('/register' , methods=['GET','POST'])
+@app.route('/users/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'GET':
-        return make_response(open('templates/sign-up.html').read())
+        return make_response(open('templates/user.html').read())
     if request.method == 'POST':
-        user = User(request.form['username'] , request.form['password'],request.form['email'])
+        json_data = request.get_json()
+        user, errors = user_schema.load(json_data)
         db.session.add(user)
         db.session.commit()
-        flash('User successfully registered')
         return redirect(url_for('login'))
 
 
-@app.route('/login',methods=['GET','POST'])
+@app.route('/users/login', methods=['GET', 'POST'])
 def login():
+    errors = []
     if request.method == 'GET':
-        return make_response(open('templates/sign-in.html').read())
+        return make_response(open('templates/user.html').read())
+    if request.method == 'POST':
+        json_data = request.get_json()
+        username = json_data['username']
+        password = json_data['password']
+        registered_user = User.query.filter_by(username=username, password=password).first()
+        if registered_user is None:
+            errors.append('Username or Password is invalid')
+            return jsonify({'error': errors}), 401
+        login_user(registered_user)
+        return redirect(request.args.get('next') or url_for('index'))
+
+
+@app.route('/logout')
+def logout():
+    logout_user()
     return redirect(url_for('index'))
 
 
 @app.route('/entries/<int:entry_id>', methods=['GET', 'POST', 'DELETE'])
+@login_required
 def get_entry(entry_id):
     errors = []
     entry = None
@@ -96,8 +117,8 @@ def get_entry(entry_id):
                 return jsonify({"error": errors}), 422
 
 
-
 @app.route('/entries', methods=['GET', 'POST'])
+@login_required
 def entries():
     entries = []
     errors = []
@@ -146,6 +167,7 @@ def receive_sms():
 
 
 @app.route('/', methods=['GET'])
+@login_required
 def index():
     return make_response(open('templates/index.html').read())
 

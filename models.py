@@ -39,6 +39,19 @@ class Entry(db.Model):
         return '<id {}>'.format(self.id)
 
 
+class UserSchema(Schema):
+    username = fields.String()
+    password = fields.String()
+    email = fields.String()
+    first_name = fields.String()
+    last_name = fields.String()
+    registered_on = fields.DateTime()
+
+    @post_load
+    def make_entry(self, data):
+        return User(**data)
+
+
 class User(db.Model):
     __tablename__ = "users"
 

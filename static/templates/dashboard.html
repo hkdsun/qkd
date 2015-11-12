@@ -2,13 +2,13 @@
 <div class="row" ng-controller="EntriesCtrl">
   <!-- Button trigger modal -->
   <div class="span12 entry-button" style="text-align:center">
-    <button class="btn btn-default btn-block" ng-click="open()">
+    <button class="btn btn-default btn-block" ng-click="newEntryModal()">
       Add New Entry
     </button>
   </div>
   <div ng-include="'static/templates/entry_modal.html'"></div>
   <!-- List all the entries -->
-  <div data-ng-repeat="entry in entries | orderBy : entry.date : true" class="col-xs-12 entry-widget-container">
+  <div data-ng-repeat="entry in entries | orderBy : 'date' : true" class="col-xs-12 entry-widget-container">
     <rd-widget>
       <rd-widget-header icon="fa-star" title='{{entry.date | amCalendar }}'>
         <i ng-click="delete(entry)" class="fa fa-trash pull-right"></i>
@@ -19,7 +19,7 @@
         <div class="row">
           <div class="entry-container col-xs-12">
             <div class="entry-editablearea" inputclass="entry-textarea" editable-textarea="entry.body" onbeforesave="updateEntry(entry, $data)">
-              <p class="entry-body">{{entry.body}}</p>
+              <p class="entry-body">{{entry.body}} </p>
             </div>
           </div>
         </div>

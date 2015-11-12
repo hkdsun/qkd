@@ -10,6 +10,9 @@ function EntriesCtrl($scope, $uibModal, $resource, Entry) {
   $scope.formEntry = new Entry({body:""})
 
   var entries = Entry.query(function(data) {
+    data.entries.map(function(en) {
+      en.date = new Date(en.date)
+    });
     $scope.entries = data.entries
   });
 
@@ -31,7 +34,7 @@ function EntriesCtrl($scope, $uibModal, $resource, Entry) {
     });
   };
 
-  $scope.open = function () {
+  $scope.newEntryModal = function () {
     var modalInstance = $uibModal.open({
       animation: true,
       templateUrl: 'static/templates/entry_modal.html',

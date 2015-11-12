@@ -4,7 +4,7 @@ import os
 from twilio.rest import TwilioRestClient
 from twilio import twiml
 from pytz import timezone
-
+from flask.ext.login import LoginManager
 
 app = Flask(__name__)
 app.config.from_object(os.environ['APP_SETTINGS'])
@@ -15,6 +15,33 @@ from models import Entry, EntrySchema
 
 entry_schema = EntrySchema()
 entries_schema = EntrySchema(many=True)
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
+
+@login_manager.user_loader
+def load_user(username):
+    return User.query.get(str(username))
+
+
+@app.route('/register' , methods=['GET','POST'])
+def register():
+    if request.method == 'GET':
+        return make_response(open('templates/sign-up.html').read())
+    if request.method == 'POST':
+        user = User(request.form['username'] , request.form['password'],request.form['email'])
+        db.session.add(user)
+        db.session.commit()
+        flash('User successfully registered')
+        return redirect(url_for('login'))
+
+
+@app.route('/login',methods=['GET','POST'])
+def login():
+    if request.method == 'GET':
+        return make_response(open('templates/sign-in.html').read())
+    return redirect(url_for('index'))
 
 
 @app.route('/entries/<int:entry_id>', methods=['GET', 'POST', 'DELETE'])
@@ -80,9 +107,6 @@ def entries():
         if 'id' in json_data:
             return get_entry(json_data['id'])
         entry, errors = entry_schema.load(json_data)
-        utc_time = entry.date
-        utc_time = utc_time.replace(tzinfo=timezone("UTC"))
-        entry.date = utc_time.astimezone(timezone("US/Eastern"))
         if errors:
             return jsonify(errors), 422
         try:

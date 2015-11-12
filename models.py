@@ -2,6 +2,9 @@ from app import db
 from datetime import datetime
 from marshmallow import Schema, fields, post_load
 from pytz import timezone
+from sqlalchemy import types
+import pytz  # from PyPI
+
 
 eastern = timezone('US/Eastern')
 utc = timezone('UTC')
@@ -9,7 +12,7 @@ utc = timezone('UTC')
 
 class EntrySchema(Schema):
     id = fields.Int(dump_only=True)
-    date = fields.DateTime()
+    date = fields.LocalDateTime()
     body = fields.String()
 
     @post_load
@@ -27,10 +30,44 @@ class Entry(db.Model):
 
     def __init__(self, body, date=None, id=None):
         if not date:
-            date = utc.normalize(datetime.now(tz=eastern))
+            date = datetime.utcnow()
         self.id = id
         self.date = date
         self.body = body
 
     def __repr__(self):
         return '<id {}>'.format(self.id)
+
+
+class User(db.Model):
+    __tablename__ = "users"
+
+    username = db.Column('username', db.String( 20), primary_key=True, unique=True, index=True)
+    password = db.Column('password', db.String(16))
+    email = db.Column('email', db.String(50), unique=True, index=True)
+    first_name = db.Column('first_name', db.String())
+    last_name = db.Column('last_name', db.String())
+    registered_on = db.Column('registered_on', db.DateTime)
+
+    def __init__(self, username, password, email, first_name, last_name):
+        self.username = username
+        self.password = password
+        self.email = email
+        self.first_name = first_name
+        self.last_name = last_name
+        self.registered_on = datetime.utcnow()
+
+    def is_authenticated(self):
+        return True
+
+    def is_active(self):
+        return True
+
+    def is_anonymous(self):
+        return False
+
+    def get_id(self):
+        return unicode(self.username)
+
+    def __repr__(self):
+        return '<User %r>' % (self.username)

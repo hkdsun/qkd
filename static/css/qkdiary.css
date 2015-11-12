@@ -11,6 +11,25 @@
   padding: 20px 20px;
 }
 
+.input-sm {
+  width: calc(100% - 78px) !important;
+  height: 100%;
+  font-size: x-large;
+}
+
+.editable-wrap {
+  width: 100%;
+}
+
+.editable-controls {
+  width: 100%;
+}
+
+.entry-editablearea {
+  color: inherit;
+  border-bottom: none;
+}
+
 .row .entry-widget-container {
   margin-bottom: 15px;
 }
@@ -37,6 +56,10 @@
   padding-left: 15px;
   padding-right: 15px;
   padding-bottom: 15px;
+}
+
+.widget .widget-body.medium {
+  height: 9em;
 }
 
 
@@ -102,7 +125,7 @@ ul.sidebar .sidebar-list .menu-icon {
 
 .entry-container {
   padding: 20px 20px;
-  font-size: larger;
+  font-size: x-large;
   font-weight: 300;
   line-height: 30px;
 }

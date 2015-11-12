@@ -17,6 +17,59 @@ entry_schema = EntrySchema()
 entries_schema = EntrySchema(many=True)
 
 
+@app.route('/entries/<int:entry_id>', methods=['GET', 'POST', 'DELETE'])
+def get_entry(entry_id):
+    errors = []
+    entry = None
+    # Getting an entry
+    if request.method == "GET":
+        try:
+            entry = db.session.query(Entry).get(entry_id)
+        except:
+            errors.append("Entry not found")
+        if entry:
+            result = entry_schema.dump(entry)
+            return jsonify(result.data)
+        else:
+            errors.append("Entry not found")
+            return jsonify({"error": errors}), 422
+    # Updating an entry #
+    if request.method == "POST":
+        print "Got post", request.data
+        try:
+            entry = db.session.query(Entry).get(entry_id)
+            json_data = request.get_json()
+            new_entry, errors = entry_schema.load(json_data)
+
+            utc_time = new_entry.date
+            utc_time = utc_time.replace(tzinfo=timezone("UTC"))
+            new_entry.date = utc_time.astimezone(timezone("US/Eastern"))
+
+            entry.body = new_entry.body
+            db.session.commit()
+        except:
+            errors.append("Couldn't get the entry from the DB")
+        if entry:
+            result = entry_schema.dump(entry)
+            print result.data
+            return jsonify(result.data)
+        else:
+            errors.append("Couldn't find entry you're looking for")
+            return jsonify({"error": errors}), 422
+    if request.method == "DELETE":
+        entry = Entry.query.get(entry_id)
+        if entry:
+            try:
+                db.session.delete(entry)
+                db.session.commit()
+                result = entry_schema.dump(entry)
+                return jsonify(result.data)
+            except:
+                raise
+                return jsonify({"error": errors}), 422
+
+
+
 @app.route('/entries', methods=['GET', 'POST'])
 def entries():
     entries = []
@@ -24,7 +77,8 @@ def entries():
 
     if request.method == "POST":
         json_data = request.get_json()
-        print json_data
+        if 'id' in json_data:
+            return get_entry(json_data['id'])
         entry, errors = entry_schema.load(json_data)
         utc_time = entry.date
         utc_time = utc_time.replace(tzinfo=timezone("UTC"))
@@ -35,8 +89,9 @@ def entries():
             db.session.add(entry)
             db.session.commit()
             result = entry_schema.dump(entry)
-            return jsonify({'entry': result.data})
+            return jsonify(result.data)
         except:
+            raise
             return jsonify({"error": errors}), 422
     if request.method == "GET":
         entries += db.session.query(Entry).all()

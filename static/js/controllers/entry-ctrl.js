@@ -13,21 +13,34 @@ function EntriesCtrl($scope, $uibModal, $resource, Entry) {
     $scope.entries = data.entries
   });
 
+  $scope.updateEntry = function(entry, body) {
+    Entry.get({id:entry.id}).$promise.then(function(r) {
+      r.body = body
+      r.$save()
+    });
+  }, function(errResponse) {
+    console.log(errResponse)
+  };
+
+  $scope.delete = function(entry) {
+    Entry.remove({id:entry.id}).$promise.then(function(r) {
+      var index = $scope.entries.indexOf(entry);
+      if (index > -1) {
+        $scope.entries.splice(index, 1);
+      }
+    });
+  };
+
   $scope.open = function () {
     var modalInstance = $uibModal.open({
       animation: true,
       templateUrl: 'static/templates/entry_modal.html',
-      controller: 'EntryModalCtrl',
-      resolve: {
-        items: function () {
-          return $scope.items;
-        }
-      }
+      controller: 'EntryModalCtrl'
     });
 
     modalInstance.result.then(function (newEntry) {
       newEntry.$save(function(u, response){
-        $scope.entries.push(u.entry)
+        $scope.entries.push(u)
       });
     });
   };

@@ -5,19 +5,22 @@
     <button class="btn btn-default btn-block" ng-click="open()">
       Add New Entry
     </button>
-</div>
+  </div>
   <div ng-include="'static/templates/entry_modal.html'"></div>
   <!-- List all the entries -->
-  <div data-ng-repeat="entry in entries | orderBy : date : true" class="col-xs-12 entry-widget-container">
+  <div data-ng-repeat="entry in entries | orderBy : entry.date : true" class="col-xs-12 entry-widget-container">
     <rd-widget>
       <rd-widget-header icon="fa-star" title='{{entry.date | amCalendar }}'>
-        <i class="fa fa-trash pull-right"></i>
-        <i class="fa fa-pencil pull-right"></i>
+        <i ng-click="delete(entry)" class="fa fa-trash pull-right"></i>
+        <!--How can I make this work? SSIGH-->
+        <!--<i class="fa fa-pencil pull-right"></i>-->
       </rd-widget-header>
       <rd-widget-body classes="medium no-padding">
         <div class="row">
           <div class="entry-container col-xs-12">
-            <p>{{entry.body}}</p>
+            <div class="entry-editablearea" inputclass="entry-textarea" editable-textarea="entry.body" onbeforesave="updateEntry(entry, $data)">
+              <p class="entry-body">{{entry.body}}</p>
+            </div>
           </div>
         </div>
       </rd-widget-body>
@@ -26,3 +29,13 @@
 </div>
 
 <!--SpinKit used to be here-->
+<!--
+<div ng-controller="TextBtnCtrl">
+  <span editable-text="user.name" e-form="textBtnForm">
+    {{ user.name || 'empty' }}
+  </span>
+  <button class="btn btn-default" ng-click="textBtnForm.$show()" ng-hide="textBtnForm.$visible">
+    edit
+  </button>
+</div>
+-->

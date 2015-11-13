@@ -29,6 +29,8 @@ def load_user(username):
     return User.query.get(str(username))
 
 
+
+
 @app.route('/users/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'GET':

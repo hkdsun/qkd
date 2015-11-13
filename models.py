@@ -89,3 +89,21 @@ class UserSchema(BaseSchema):
     last_name = fields.String(required=True)
     phone_number = fields.String()
     registered_on = fields.DateTime()
+
+
+class Favorite(db.Schema):
+    __tablename__ = 'favorites'
+
+    entry = db.Column(db.Integer, db.ForeignKey('entries.id'), nullable=False)
+    user = db.Column(db.String(), db.ForeignKey('users.username'), nullable=False)
+    date = db.Column(db.DateTime())
+
+    def __init__(self, entry, username, date=None):
+        if not date:
+            date = datetime.utcnow()
+        self.entry = entry
+        self.user = username
+        self.date = date
+
+    def __repr__(self):
+        return '<entry {}, user {}>'.format(self.entry, self.user)

@@ -61,7 +61,7 @@ def login():
         return jsonify({"result": "true"})
 
 
-@app.route('/logout')
+@app.route('/users/logout')
 def logout():
     logout_user()
     return redirect(url_for('index'))
@@ -152,14 +152,17 @@ def receive_sms():
     if request.method == "POST":
         from_number = request.values.get('From', None)
         body = request.values.get('Body', None)
+        print "received text from", from_number
         if from_number and body:
-            entry = Entry(body=body)
+            user = db.session.query(User).filter(User.phone_number == from_number).first()
+            print "user", user
+            message = "Noted, sir!"
+            entry = Entry(body=body, username=user.username)
             try:
                 db.session.add(entry)
                 db.session.commit()
             except:
                 message = "I'm sorry I couldn't get that through. Maybe you can try again"
-            message = "Noted, sir!"
         else:
             return make_response("invalid request")
     else:

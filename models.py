@@ -21,10 +21,10 @@ class Entry(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.DateTime())
-    username = db.Column(db.String(), db.ForeignKey('users.username'))
+    username = db.Column(db.String(), db.ForeignKey('users.username'), nullable=False)
     body = db.Column(db.String())
 
-    def __init__(self, body, date=None, id=None):
+    def __init__(self, body, username, date=None, id=None):
         if not date:
             date = datetime.utcnow()
         self.id = id
@@ -50,15 +50,17 @@ class User(db.Model):
     first_name = db.Column('first_name', db.String())
     last_name = db.Column('last_name', db.String())
     registered_on = db.Column('registered_on', db.DateTime)
+    phone_number = db.Column('phone_number', db.String(12))
     entries = db.relationship("Entry", backref="user")
 
-    def __init__(self, username, password, email, first_name, last_name):
+    def __init__(self, username, password, email, first_name, last_name, phone_number=None):
         self.username = username
         self.password = password
         self.email = email
         self.first_name = first_name
         self.last_name = last_name
         self.registered_on = datetime.utcnow()
+        self.phone_number = phone_number
 
     def is_authenticated(self):
         return True
@@ -83,4 +85,5 @@ class UserSchema(BaseSchema):
     email = fields.Email(required=True)
     first_name = fields.String(required=True)
     last_name = fields.String(required=True)
+    phone_number = fields.String()
     registered_on = fields.DateTime()

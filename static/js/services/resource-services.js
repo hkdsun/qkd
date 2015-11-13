@@ -9,6 +9,6 @@ angular.module('QKDiary').factory('User', function($resource) {
     query: { method: "GET", isArray: false },
     authenticate: { url: '/users/login', method: "POST" },
     register: { url: '/users/register', method: "POST" },
-    deauthenticate: { url: '/users/logout', method: "POST" }
+    deauthenticate: { url: '/users/logout', method: "GET" }
   });
 });

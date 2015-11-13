@@ -26,7 +26,7 @@ angular
     }
 
     function Logout(callback) {
-      User.logout({}, {}).$promise.then(
+      User.deauthenticate({}, {}).$promise.then(
           function(response) {
             response.success = true;
             callback(response);

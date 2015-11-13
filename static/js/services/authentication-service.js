@@ -7,40 +7,47 @@ angular
     var service = {};
 
     service.Login = Login;
-    service.SetCredentials = SetCredentials;
-    service.ClearCredentials = ClearCredentials;
+    service.Logout = Logout;
+    service.Register = Register;
 
     return service;
      
     function Login(username, password, callback) {
-      User.authenticate({cmd: 'login'}, { username: username, password: password}).$promise.then(
+      User.authenticate({}, { username: username, password: password}).$promise.then(
         function(response) {
           response.success = true;
           callback(response);
         },
         function(err) {
-          console.log("Couldn't authenticate", err)
+          err.success = false;
+          callback(err);
         }
       );
     }
 
-    function SetCredentials(username, password) {
-      var authdata = Base64.encode(username + ':' + password);
-
-      $rootScope.globals = {
-        currentUser: {
-        username: username,
-        authdata: authdata
-        }
-      };
-
-      $http.defaults.headers.common['Authorization'] = 'Basic ' + authdata; // jshint ignore:line
-      $cookieStore.put('globals', $rootScope.globals);
+    function Logout(callback) {
+      User.logout({}, {}).$promise.then(
+          function(response) {
+            response.success = true;
+            callback(response);
+          },
+          function(err) {
+            err.success = false;
+            callback(err);
+          }
+        );
     }
 
-    function ClearCredentials() {
-      $rootScope.globals = {};
-      $cookieStore.remove('globals');
-      $http.defaults.headers.common.Authorization = 'Basic';
+    function Register(user, callback) {
+      User.register({}, user).$promise.then(
+        function(response) {
+          response.success = true;
+          callback(response)
+        },
+        function(err) {
+          err.success = false;
+          callback(err)
+        }
+      );
     }
   }

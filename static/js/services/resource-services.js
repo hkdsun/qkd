@@ -5,8 +5,10 @@ angular.module('QKDiary').factory('Entry', function($resource) {
 });
 
 angular.module('QKDiary').factory('User', function($resource) {
-  return $resource("/users/:cmd", {}, {
+  return $resource("/users/:id", {}, {
     query: { method: "GET", isArray: false },
-    authenticate: { method: "POST" }
+    authenticate: { url: '/users/login', method: "POST" },
+    register: { url: '/users/register', method: "POST" },
+    deauthenticate: { url: '/users/logout', method: "POST" }
   });
 });

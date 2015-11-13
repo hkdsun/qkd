@@ -36,9 +36,12 @@ def register():
     if request.method == 'POST':
         json_data = request.get_json()
         user, errors = user_schema.load(json_data)
-        db.session.add(user)
-        db.session.commit()
-        return redirect(url_for('login'))
+        if not errors:
+            db.session.add(user)
+            db.session.commit()
+            return redirect(url_for('login'))
+        else:
+            return jsonify({'error': errors}), 400
 
 
 @app.route('/users/login', methods=['GET', 'POST'])
@@ -55,7 +58,7 @@ def login():
             errors.append('Username or Password is invalid')
             return jsonify({'error': errors}), 401
         login_user(registered_user)
-        return redirect(request.args.get('next') or url_for('index'))
+        return jsonify({"result": "true"})
 
 
 @app.route('/logout')
@@ -72,7 +75,7 @@ def get_entry(entry_id):
     # Getting an entry
     if request.method == "GET":
         try:
-            entry = db.session.query(Entry).get(entry_id)
+            entry = db.session.query(Entry).filter(Entry.username == current_user.username).get(entry_id)
         except:
             errors.append("Entry not found")
         if entry:
@@ -85,9 +88,10 @@ def get_entry(entry_id):
     if request.method == "POST":
         print "Got post", request.data
         try:
-            entry = db.session.query(Entry).get(entry_id)
+            entry = db.session.query(Entry).filter(Entry.body == current_user.username).get(entry_id)
             json_data = request.get_json()
             new_entry, errors = entry_schema.load(json_data)
+            new_entry.username = current_user.username
 
             utc_time = new_entry.date
             utc_time = utc_time.replace(tzinfo=timezone("UTC"))
@@ -125,12 +129,11 @@ def entries():
 
     if request.method == "POST":
         json_data = request.get_json()
-        if 'id' in json_data:
-            return get_entry(json_data['id'])
         entry, errors = entry_schema.load(json_data)
         if errors:
             return jsonify(errors), 422
         try:
+            entry.username = current_user.username
             db.session.add(entry)
             db.session.commit()
             result = entry_schema.dump(entry)
@@ -139,7 +142,7 @@ def entries():
             raise
             return jsonify({"error": errors}), 422
     if request.method == "GET":
-        entries += db.session.query(Entry).all()
+        entries += db.session.query(Entry).filter(Entry.username == current_user.username).all()
         result = entries_schema.dump(entries)
         return jsonify({'entries': result.data})
 

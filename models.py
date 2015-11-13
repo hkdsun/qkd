@@ -2,22 +2,18 @@ from app import db
 from datetime import datetime
 from marshmallow import Schema, fields, post_load
 from pytz import timezone
-from sqlalchemy import types
-import pytz  # from PyPI
 
 
 eastern = timezone('US/Eastern')
 utc = timezone('UTC')
 
 
-class EntrySchema(Schema):
-    id = fields.Int(dump_only=True)
-    date = fields.LocalDateTime()
-    body = fields.String()
+class BaseSchema(Schema):
+    __model__ = None
 
     @post_load
-    def make_entry(self, data):
-        return Entry(**data)
+    def make_model(self, data):
+        return self.__model__(**data)
 
 
 class Entry(db.Model):
@@ -25,7 +21,7 @@ class Entry(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.DateTime())
-    user = db.Column(db.String())
+    username = db.Column(db.String(), db.ForeignKey('users.username'))
     body = db.Column(db.String())
 
     def __init__(self, body, date=None, id=None):
@@ -39,28 +35,22 @@ class Entry(db.Model):
         return '<id {}>'.format(self.id)
 
 
-class UserSchema(Schema):
-    username = fields.String()
-    password = fields.String()
-    email = fields.String()
-    first_name = fields.String()
-    last_name = fields.String()
-    registered_on = fields.DateTime()
-
-    @post_load
-    def make_entry(self, data):
-        return User(**data)
+class EntrySchema(BaseSchema):
+    __model__ = Entry
+    id = fields.Int(dump_only=True)
+    date = fields.LocalDateTime()
+    body = fields.String()
 
 
 class User(db.Model):
     __tablename__ = "users"
-
-    username = db.Column('username', db.String( 20), primary_key=True, unique=True, index=True)
+    username = db.Column('username', db.String(20), primary_key=True, unique=True, index=True)
     password = db.Column('password', db.String(16))
     email = db.Column('email', db.String(50), unique=True, index=True)
     first_name = db.Column('first_name', db.String())
     last_name = db.Column('last_name', db.String())
     registered_on = db.Column('registered_on', db.DateTime)
+    entries = db.relationship("Entry", backref="user")
 
     def __init__(self, username, password, email, first_name, last_name):
         self.username = username
@@ -84,3 +74,13 @@ class User(db.Model):
 
     def __repr__(self):
         return '<User %r>' % (self.username)
+
+
+class UserSchema(BaseSchema):
+    __model__ = User
+    username = fields.String(required=True)
+    password = fields.String(required=True)
+    email = fields.Email(required=True)
+    first_name = fields.String(required=True)
+    last_name = fields.String(required=True)
+    registered_on = fields.DateTime()

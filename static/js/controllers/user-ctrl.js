@@ -1,8 +1,8 @@
 angular
   .module('QKDiary')
-  .controller('UserCtrl', ['$scope', '$resource', 'AuthenticationService', UserCtrl]);
+  .controller('UserCtrl', ['$scope', '$resource', '$window', '$timeout', 'AuthenticationService', 'User', UserCtrl]);
 
-function UserCtrl($scope, $resource, AuthenticationService) {
+function UserCtrl($scope, $resource, $window, $timeout, AuthenticationService, User) {
   $scope.vm = this;
 
   $scope.login = function() {
@@ -10,26 +10,29 @@ function UserCtrl($scope, $resource, AuthenticationService) {
     vm.dataLoading = true;
     AuthenticationService.Login(vm.username, vm.password, function(response) {
       if (response.success) {
-        AuthenticationService.SetCredentials(vm.username, vm.password);
-        $location.path('/');
+        $window.location.href = "/";
       } else {
-        FlashService.Error(response.message);
+        vm.error = "Invalid username or password";
         vm.dataLoading = false;
       }
     });
   };
 
   $scope.register = function() {
-      $scope.vm.dataLoading = true
-      UserService.Create(vm.user)
-      .then(function(response) {
-          if (response.success) {
-              FlashService.Success('Registration successful', true)
-              $location.path('/login')
-          } else {
-              FlashService.Error(response.message)
-              vm.dataLoading=false
-          }
-      })
+    vm = $scope.vm;
+    vm.dataLoading = true
+    console.log(vm)
+
+    AuthenticationService.Register(vm.user ,function(response) {
+        if (response.success) {
+          vm.success = 'Registration successful. You will be redirected shortly'
+          $timeout(function() {
+            $window.location.href = "/users/login"
+          }, 4000);
+        } else {
+          vm.error = 'Failed';
+          vm.dataLoading=false
+        }
+    });
   }
 }

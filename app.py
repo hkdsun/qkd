@@ -75,32 +75,28 @@ def get_entry(entry_id):
     # Getting an entry
     if request.method == "GET":
         try:
-            entry = db.session.query(Entry).filter(Entry.username == current_user.username).get(entry_id)
+            entry = db.session.query(Entry).filter(Entry.username == current_user.username).filter(Entry.id == entry_id).one()
         except:
             errors.append("Entry not found")
         if entry:
             result = entry_schema.dump(entry)
+            print result.data
             return jsonify(result.data)
         else:
-            errors.append("Entry not found")
             return jsonify({"error": errors}), 422
     # Updating an entry #
     if request.method == "POST":
-        print "Got post", request.data
         try:
-            entry = db.session.query(Entry).filter(Entry.body == current_user.username).get(entry_id)
+            entry = db.session.query(Entry).filter(Entry.username == current_user.username).filter(Entry.id == entry_id).one()
             json_data = request.get_json()
+            json_data['username'] = current_user.username
             new_entry, errors = entry_schema.load(json_data)
-            new_entry.username = current_user.username
-
-            utc_time = new_entry.date
-            utc_time = utc_time.replace(tzinfo=timezone("UTC"))
-            new_entry.date = utc_time.astimezone(timezone("US/Eastern"))
 
             entry.body = new_entry.body
             db.session.commit()
-        except:
-            errors.append("Couldn't get the entry from the DB")
+        except Exception as e:
+            raise
+            errors.append("Couldn't get the entry from the DB " + str(e))
         if entry:
             result = entry_schema.dump(entry)
             print result.data
@@ -129,6 +125,7 @@ def entries():
 
     if request.method == "POST":
         json_data = request.get_json()
+        json_data['username'] = current_user.username
         entry, errors = entry_schema.load(json_data)
         if errors:
             return jsonify(errors), 422
@@ -154,7 +151,7 @@ def receive_sms():
         body = request.values.get('Body', None)
         print "received text from", from_number
         if from_number and body:
-            user = db.session.query(User).filter(User.phone_number == from_number).first()
+            user = db.session.query(User).filter(User.phone_number == from_number).one()
             print "user", user
             message = "Noted, sir!"
             entry = Entry(body=body, username=user.username)

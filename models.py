@@ -28,6 +28,7 @@ class Entry(db.Model):
         if not date:
             date = datetime.utcnow()
         self.id = id
+        self.username = username
         self.date = date
         self.body = body
 
@@ -40,6 +41,7 @@ class EntrySchema(BaseSchema):
     id = fields.Int(dump_only=True)
     date = fields.LocalDateTime()
     body = fields.String()
+    username = fields.String()
 
 
 class User(db.Model):

@@ -19,7 +19,7 @@ function EntriesCtrl($scope, $uibModal, $resource, Entry) {
   $scope.updateEntry = function(entry, body) {
     Entry.get({id:entry.id}).$promise.then(function(r) {
       r.body = body
-      r.$save()
+      r.$save({id:entry.id})
     });
   }, function(errResponse) {
     console.log(errResponse)

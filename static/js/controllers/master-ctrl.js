@@ -34,12 +34,16 @@ function MasterCtrl($scope, $cookieStore) {
     };
 
     $scope.showAll = function() {
-      $scope.showFavorites = null;
+      $scope.showFavorites = "";
       $cookieStore.put('showFavorites', $scope.showFavorites);
     };
 
     $scope.toggleFavorites = function() {
-      $scope.showFavorites = !$scope.showFavorites
+      if ($scope.showFavorites) {
+        $scope.showFavorites = "";
+      } else {
+        $scope.showFavorites = true;
+      }
       $cookieStore.put('showFavorites', $scope.showFavorites);
     };
 

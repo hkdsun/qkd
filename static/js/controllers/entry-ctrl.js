@@ -20,9 +20,30 @@ function EntriesCtrl($scope, $uibModal, $resource, Entry) {
     Entry.get({id:entry.id}).$promise.then(function(r) {
       r.body = body
       r.$save({id:entry.id})
+    }, function(errResponse) {
+      console.log(errResponse)
     });
-  }, function(errResponse) {
-    console.log(errResponse)
+  };
+
+  $scope.favoriteEntry = function(entry) {
+    Entry.get({id:entry.id}).$promise.then(function(r) {
+      if (r.favorite) {
+        Entry.defavorite({id:r.id}, {}).$promise.then(function(r) {
+          entry.favorite = false;
+        }, function(err) {
+          console.log(err)
+        });
+      } else {
+        Entry.favorite({id:r.id}, {}).$promise.then(function(r) {
+          entry.favorite = true;
+        }, function(err) {
+          console.log(err)
+        });
+      }
+    }, function(errResponse) {
+      console.log(errResponse);
+    });
+    
   };
 
   $scope.delete = function(entry) {

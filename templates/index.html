@@ -46,14 +46,14 @@
         <div class="text-center sidebar-nav-wrapper">
           <li class="sidebar-list">
             <div>
-              <a href="#"><span class="menu-icon fa fa-calendar"></span><br><p class="sidebar-label">Memories</p></a>
+              <a href ng-click="showAll()"><span class="menu-icon fa fa-calendar"></span><br><p class="sidebar-label">Memories</p></a>
             </div>
           </li>
           <li class="sidebar-list">
-            <a href="#/tables"><span class="menu-icon fa fa-star"></span><br><p class="sidebar-label">Favourites</p></a>
+            <a href ng-click="toggleFavorites()"><span class="menu-icon fa fa-star"></span><br><p class="sidebar-label">Favourites</p></a>
           </li>
           <li class="sidebar-list">
-            <a href="#/settings"><span class="menu-icon fa fa-cogs"></span><br><p class="sidebar-label">Settings</p></a>
+            <a href><span class="menu-icon fa fa-cogs"></span><br><p class="sidebar-label">Settings</p></a>
           </li>
         </div>
       </ul>
@@ -69,7 +69,7 @@
           </a>
         </div>
         <div class="col-xs-4">
-          <a href="#">
+          <a href>
             Support
           </a>
         </div>
@@ -90,7 +90,7 @@
                 </a>
                 <ul class="uib-dropdown-menu" aria-labelledby="simple-dropdown">
                   <li class="link">
-                    <a href="#">
+                    <a href>
                       Profile
                     </a>
                   </li>

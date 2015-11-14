@@ -3,7 +3,7 @@ from flask.ext.sqlalchemy import SQLAlchemy
 import os
 from twilio.rest import TwilioRestClient
 from twilio import twiml
-from pytz import timezone
+from datetime import datetime
 from flask.ext.login import LoginManager
 from flask.ext.login import login_user, logout_user, current_user, login_required
 
@@ -67,6 +67,45 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for('index'))
+
+
+@app.route('/entries/<int:entry_id>/favorite', methods=['POST', 'DELETE'])
+@login_required
+def favorite_entry(entry_id):
+    errors = []
+    if request.method == "POST":
+        try:
+            entry = db.session.query(Entry).filter(Entry.username == current_user.username).filter(Entry.id == entry_id).one()
+            entry.favorite = True
+            entry.date_favorited = datetime.utcnow()
+            db.session.commit()
+        except Exception as e:
+            raise
+            errors.append("Couldn't get the entry from the DB " + str(e))
+        if entry:
+            result = entry_schema.dump(entry)
+            print result.data
+            return jsonify(result.data)
+        else:
+            errors.append("Couldn't find entry you're looking for")
+            return jsonify({"error": errors}), 422
+    if request.method == "DELETE":
+        try:
+            entry = db.session.query(Entry).filter(Entry.username == current_user.username).filter(Entry.id == entry_id).one()
+            entry.favorite = False
+            entry.date_favorited = None
+            db.session.commit()
+        except Exception as e:
+            raise
+            errors.append("Couldn't get the entry from the DB " + str(e))
+        if entry:
+            result = entry_schema.dump(entry)
+            print result.data
+            return jsonify(result.data)
+        else:
+            errors.append("Couldn't find entry you're looking for")
+            return jsonify({"error": errors}), 422
+
 
 
 @app.route('/entries/<int:entry_id>', methods=['GET', 'POST', 'DELETE'])

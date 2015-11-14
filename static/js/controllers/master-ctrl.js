@@ -33,6 +33,16 @@ function MasterCtrl($scope, $cookieStore) {
         $cookieStore.put('toggle', $scope.toggle);
     };
 
+    $scope.showAll = function() {
+      $scope.showFavorites = null;
+      $cookieStore.put('showFavorites', $scope.showFavorites);
+    };
+
+    $scope.toggleFavorites = function() {
+      $scope.showFavorites = !$scope.showFavorites
+      $cookieStore.put('showFavorites', $scope.showFavorites);
+    };
+
     window.onresize = function() {
         $scope.$apply();
     };

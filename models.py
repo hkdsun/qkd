@@ -23,14 +23,18 @@ class Entry(db.Model):
     date = db.Column(db.DateTime())
     username = db.Column(db.String(), db.ForeignKey('users.username'), nullable=False)
     body = db.Column(db.String())
+    favorite = db.Column(db.Boolean())
+    date_favorited = db.Column(db.DateTime())
 
-    def __init__(self, body, username, date=None, id=None):
+    def __init__(self, body, username, favorite, date_favorited, date=None, id=None):
         if not date:
             date = datetime.utcnow()
         self.id = id
         self.username = username
         self.date = date
         self.body = body
+        self.favorite = favorite
+        self.date_favorited = date_favorited
 
     def __repr__(self):
         return '<id {}>'.format(self.id)
@@ -39,9 +43,11 @@ class Entry(db.Model):
 class EntrySchema(BaseSchema):
     __model__ = Entry
     id = fields.Int(dump_only=True)
-    date = fields.LocalDateTime()
-    body = fields.String()
-    username = fields.String()
+    date = fields.DateTime()
+    body = fields.String(required=True)
+    username = fields.String(required=True)
+    favorite = fields.Bool()
+    date_favorited = fields.DateTime()
 
 
 class User(db.Model):
@@ -89,21 +95,3 @@ class UserSchema(BaseSchema):
     last_name = fields.String(required=True)
     phone_number = fields.String()
     registered_on = fields.DateTime()
-
-
-class Favorite(db.Schema):
-    __tablename__ = 'favorites'
-
-    entry = db.Column(db.Integer, db.ForeignKey('entries.id'), nullable=False)
-    user = db.Column(db.String(), db.ForeignKey('users.username'), nullable=False)
-    date = db.Column(db.DateTime())
-
-    def __init__(self, entry, username, date=None):
-        if not date:
-            date = datetime.utcnow()
-        self.entry = entry
-        self.user = username
-        self.date = date
-
-    def __repr__(self):
-        return '<entry {}, user {}>'.format(self.entry, self.user)

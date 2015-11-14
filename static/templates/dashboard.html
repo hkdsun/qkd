@@ -1,4 +1,3 @@
-
 <div class="row" ng-controller="EntriesCtrl">
   <!-- Button trigger modal -->
   <div class="span12 entry-button" style="text-align:center">
@@ -8,10 +7,11 @@
   </div>
   <div ng-include="'static/templates/entry_modal.html'"></div>
   <!-- List all the entries -->
-  <div data-ng-repeat="entry in entries | orderBy : 'date' : true" class="col-xs-12 entry-widget-container">
+  <div data-ng-repeat="entry in entries | orderBy : 'date' : true | filter:{favorite: showFavorites}" class="col-xs-12 entry-widget-container">
     <rd-widget>
-      <rd-widget-header icon="fa-star" title='{{entry.date | amCalendar }}'>
+      <rd-widget-header icon="{{ entry.favorite ? 'fa-star' : 'fa-star-o' }}" title='{{entry.date | amCalendar }}'>
         <i ng-click="delete(entry)" class="fa fa-trash pull-right"></i>
+        <i ng-click="favoriteEntry(entry)" class="fa fa-star pull-right"></i>
         <!--How can I make this work? SSIGH-->
         <!--<i class="fa fa-pencil pull-right"></i>-->
       </rd-widget-header>

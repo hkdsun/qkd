@@ -9,16 +9,20 @@
   <!-- List all the entries -->
   <div data-ng-repeat="entry in entries | orderBy : 'date' : true | filter:{favorite: showFavorites}" class="col-xs-12 entry-widget-container">
     <rd-widget>
-      <rd-widget-header icon="{{ entry.favorite ? 'fa-star' : 'fa-star-o' }}" title='{{entry.date | amCalendar }}'>
-        <i ng-click="delete(entry)" class="fa fa-trash pull-right"></i>
-        <i ng-click="favoriteEntry(entry)" class="fa fa-star pull-right"></i>
-        <!--How can I make this work? SSIGH-->
-        <!--<i class="fa fa-pencil pull-right"></i>-->
+      <rd-widget-header>
+        <div class="pull-left">
+          <i ng-click='favoriteEntry(entry)' class="fa {{ entry.favorite ? 'fa-star' : 'fa-star-o' }}"></i>
+          <span>{{entry.date | amCalendar }}</span>
+        </div>
+        <div class="pull-right col-xs-6 col-sm-4">
+          <i ng-click="delete(entry)" class="fa fa-trash pull-right"></i>
+          <i ng-click="editForm.$show()" class="fa fa-pencil pull-right"></i>
+        </div>
       </rd-widget-header>
       <rd-widget-body classes="medium no-padding">
         <div class="row">
           <div class="entry-container col-xs-12">
-            <div class="entry-editablearea" inputclass="entry-textarea" editable-textarea="entry.body" onbeforesave="updateEntry(entry, $data)">
+            <div class="entry-editablearea" e-form="editForm" inputclass="entry-textarea" editable-textarea="entry.body" onbeforesave="updateEntry(entry, $data)">
               <p class="entry-body">{{entry.body}} </p>
             </div>
           </div>

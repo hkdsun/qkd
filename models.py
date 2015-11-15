@@ -26,7 +26,7 @@ class Entry(db.Model):
     favorite = db.Column(db.Boolean())
     date_favorited = db.Column(db.DateTime())
 
-    def __init__(self, body, username, favorite, date_favorited, date=None, id=None):
+    def __init__(self, body, username, favorite=False, date_favorited=None, date=None, id=None):
         if not date:
             date = datetime.utcnow()
         self.id = id
